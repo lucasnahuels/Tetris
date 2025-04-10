@@ -45,7 +45,6 @@ This is like a Tetris game where the cubes are stacked on top of each other.
 In this case there are four spaces in each row represented by the boolean matrix in the AddCubes method.
  */
 
-using System;
 
 public class ConstructionGame
 {
@@ -87,6 +86,20 @@ public class ConstructionGame
         }
     }
 
+    public void AddCubesNotSubmitted(bool[,] cubes)
+    {
+        for (int i = 0; i < length; i++)
+        {
+            for (int j = 0; j < width; j++)
+            {
+                if(cubes[i, j])
+                {
+                    table[i, j]++;
+                }
+            }
+        }
+        ClearRows();
+    }
 
     public int GetHeight()
     {
@@ -109,11 +122,24 @@ public class ConstructionGame
         return maxHeight;
     }
 
+    public int GetHeightNotSubmitted()
+    {
+        return table.Cast<int>().Max();
+    }
+
+    public void ClearRows()
+    {
+        if (!table.Cast<int>().ToList().Contains(0)) 
+        {
+            table = table.Cast<int>().Select(x => x - 1).ToArray().Reshape(length, width);
+        }
+    }
+
     public static void Main(string[] args)
     {
         ConstructionGame game = new ConstructionGame(2, 2);
 
-        game.AddCubes(new bool[,]
+        game.AddCubesNotSubmitted(new bool[,]
         {
             { true, true },
             { false, false }
@@ -122,35 +148,58 @@ public class ConstructionGame
         // { 0, 0 }
         // not cleaning row
 
-        game.AddCubes(new bool[,]
+        game.AddCubesNotSubmitted(new bool[,]
         {
             { true, true },
             { false, true }
         });
-        Console.WriteLine(game.GetHeight()); // should print 2 
+        Console.WriteLine(game.GetHeightNotSubmitted()); // should print 2 
         // { 2, 2 },
         // { 0, 1 }
         // not cleaning row
 
-        game.AddCubes(new bool[,]
+        game.AddCubesNotSubmitted(new bool[,]
+        {
+            { true, false },
+            { false, false }
+        });
+        Console.WriteLine(game.GetHeightNotSubmitted()); // should print 3
+        // { 3, 2 },
+        // { 0, 1 }
+        // not cleaning row
+
+        game.AddCubesNotSubmitted(new bool[,]
         {
             { false, false },
             { true, true }
         });
-        Console.WriteLine(game.GetHeight()); // should print 1 
-        // { 2, 2 },
+        Console.WriteLine(game.GetHeightNotSubmitted()); // should print 2
+        // { 3, 2 },
         // { 1, 2 }
         // has to clean row
         // After cleaning row:
-        // { 1, 1 },
+        // { 2, 1 },
         // { 0, 1 }
 
-        game.AddCubes(new bool[,]
+        game.AddCubesNotSubmitted(new bool[,]
         {
             { false, false },
             { true, false }
         });
-        Console.WriteLine(game.GetHeight()); // should print 0 
+        Console.WriteLine(game.GetHeightNotSubmitted()); // should print 1
+        // { 2, 1 },
+        // { 1, 1 } 
+        // has to clean row
+        // After cleaning row:
+        // { 1, 0 },
+        // { 0, 0 }
+
+        game.AddCubesNotSubmitted(new bool[,]
+        {
+            { false, true },
+            { true, true }
+        });
+        Console.WriteLine(game.GetHeightNotSubmitted()); // should print 0
         // { 1, 1 },
         // { 1, 1 } 
         // has to clean row
