@@ -39,10 +39,6 @@ game.AddCubes(new bool[,]
 });
 
 Console.WriteLine(game.GetHeight()); //should print 1
-
-
-This is like a Tetris game where the cubes are stacked on top of each other.
-In this case there are four spaces in each row represented by the boolean matrix in the AddCubes method.
  */
 
 
@@ -88,16 +84,16 @@ public class ConstructionGame
 
     public void AddCubesNotSubmitted(bool[,] cubes)
     {
-        for (int i = 0; i < length; i++)
+        Parallel.For(0, length, i =>
         {
             for (int j = 0; j < width; j++)
             {
-                if(cubes[i, j])
+                if (cubes[i, j])
                 {
                     table[i, j]++;
                 }
             }
-        }
+        });
         ClearRows();
     }
 
